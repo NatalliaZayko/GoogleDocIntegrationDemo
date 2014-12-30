@@ -15,14 +15,15 @@ public class MySpreadsheetIntegration {
 			MalformedURLException, IOException, ServiceException,
 			GeneralSecurityException {
 		Scanner in = new Scanner(System.in);
+		System.out.println("Course:");
+		String course = in.nextLine();		
 		System.out.println("Week:");
 		int week = in.nextInt();
-		System.out.println("Course:");
-		String course = in.next();	
 		in.close();			
 		Steps.authorize();
 		Steps.getListNames(week, course);
 		Steps.loginInClassMarket();
+		
 		
 		
 		
