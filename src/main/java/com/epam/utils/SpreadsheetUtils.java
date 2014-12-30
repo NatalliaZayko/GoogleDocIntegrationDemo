@@ -6,6 +6,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -23,10 +24,12 @@ import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.util.ServiceException;
 
 public class SpreadsheetUtils {
-	private final static String CLIENT_ID = "368716366431-ed35peic1fbo60g7a4emk6fntc1atjav.apps.googleusercontent.com";
-	private final static String CLIENT_SECRET = "tUhpqyvbAMx8Iv6-AJKnctqN";
-	private final static String SCOPE = "https://spreadsheets.google.com/feeds https://docs.google.com/feeds ";
-	private final static String REDIRECT_URL = "https://developers.google.com/oauthplayground/";
+	
+	private static ResourceBundle resource = ResourceBundle.getBundle("googleCredentials");
+	private static String client_id = resource.getString("client_id");
+	private static String client_secret = resource.getString("client_secret");
+	private static String redirect_url= resource.getString("redirect_url");
+	private final static String SCOPE = "https://spreadsheets.google.com/feeds https://docs.google.com/feeds ";;
 	private final static String SPREADSHEETFEED_URL = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
 
 	private static GoogleAuthorizationCodeFlow getFlow() {
@@ -44,13 +47,13 @@ public class SpreadsheetUtils {
 		JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 
 		return new GoogleAuthorizationCodeFlow(httpTransport, jsonFactory,
-				CLIENT_ID, CLIENT_SECRET, Collections.singleton(SCOPE));
+				client_id, client_secret, Collections.singleton(SCOPE));
 	}
 
 	public static String getUrlForCode() {
 		GoogleAuthorizationCodeFlow flow = getFlow();
 		String authorizationUrl = flow.newAuthorizationUrl()
-				.setRedirectUri(REDIRECT_URL).build();
+				.setRedirectUri(redirect_url).build();
 		return authorizationUrl;
 	}
 
@@ -59,7 +62,7 @@ public class SpreadsheetUtils {
 		GoogleTokenResponse response = null;
 		try {
 			response = flow.newTokenRequest(authorizeCode)
-					.setRedirectUri(REDIRECT_URL).execute();
+					.setRedirectUri(redirect_url).execute();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
