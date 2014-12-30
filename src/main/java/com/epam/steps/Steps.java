@@ -2,6 +2,7 @@ package com.epam.steps;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import com.epam.pageobject.pages.ClassMarketMainPage;
 import com.epam.pageobject.pages.GooglePage;
@@ -12,8 +13,14 @@ import com.google.gdata.data.spreadsheet.SpreadsheetEntry;
 import com.google.gdata.util.ServiceException;
 
 public class Steps {
+	
+	private static ResourceBundle resource = ResourceBundle.getBundle("googleDocs");
+	private static String spreadsheet_name = resource.getString("nameOfDocument");
+	
 	private static SpreadsheetService service = null;
-	private final static String SPREADSHEET_NAME = "Q4 Schedule";
+	//private final static String SPREADSHEET_NAME = "Q4 Schedule";
+	
+	
 	private static List<String> names = null;
 	
 
@@ -29,7 +36,7 @@ public class Steps {
 	public static void getListNames(int week, String course)
 			throws IOException, ServiceException {
 		SpreadsheetEntry spreadsheet = SpreadsheetUtils.getSpreadsheetEntry(
-				SPREADSHEET_NAME, service);
+				spreadsheet_name, service);
 		ListFeed listFeed = SpreadsheetUtils.getListFeed(service, spreadsheet);
 		names = SpreadsheetUtils.getNames(week, course, listFeed);		
 		System.out.println(names);
