@@ -24,11 +24,12 @@ import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.util.ServiceException;
 
 public class SpreadsheetUtils {
-	
-	private static ResourceBundle resource = ResourceBundle.getBundle("googleCredentials");
+
+	private static ResourceBundle resource = ResourceBundle
+			.getBundle("googleCredentials");
 	private static String client_id = resource.getString("client_id");
 	private static String client_secret = resource.getString("client_secret");
-	private static String redirect_url= resource.getString("redirect_url");
+	private static String redirect_url = resource.getString("redirect_url");
 	private final static String SCOPE = "https://spreadsheets.google.com/feeds https://docs.google.com/feeds ";;
 	private final static String SPREADSHEETFEED_URL = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
 
@@ -85,7 +86,6 @@ public class SpreadsheetUtils {
 				SpreadsheetFeed.class);
 		List<SpreadsheetEntry> spreadsheets = feed.getEntries();
 		return spreadsheets;
-
 	}
 
 	public static SpreadsheetEntry getSpreadsheetEntry(String spreadsheetTitle,
@@ -118,23 +118,20 @@ public class SpreadsheetUtils {
 		for (ListEntry row : rows) {
 			Set<String> tags = row.getCustomElements().getTags();
 			String weekTag = getTagByNumber(week, tags, "week");
-
 			String testsscoreTag = getTagByNumber(week, tags, "testsscore");
-
 			for (String tag : tags) {
 				if (tag.equals(weekTag)) {
 					if (row.getCustomElements().getValue(tag) != null) {
 						if (row.getCustomElements().getValue(tag)
 								.equals(course)) {
 							if (row.getCustomElements().getValue(testsscoreTag) == null) {
-
 								String name = row.getCustomElements().getValue(
 										"mentee");
 								if (name != null) {
-									name = name.replace(" ", "_");
-									String fullName = new StringBuffer(name)
-											.append("@epam.com").toString();
-									names.add(fullName);
+									// name = name.replace(" ", "_");
+									// String fullName = new StringBuffer(name)
+									// .append("@epam.com").toString();
+									names.add(name);
 								}
 							}
 						}
@@ -147,17 +144,46 @@ public class SpreadsheetUtils {
 		return names;
 	}
 
-	private static String getTagByNumber(int week, Set<String> tags,
+	public static String getTagByNumber(int week, Set<String> tags,
 			String partOftagName) {
 		int i = 0;
 		for (String tag : tags) {
 			if (tag.contains(partOftagName)) {
 				if ((i + 1) == week) {
+
 					return tag;
 				}
 				i++;
 			}
 		}
 		return null;
+	}
+
+	public static void setResults(HashMapSkin results, ListFeed listFeed,
+			int week) throws IOException, ServiceException {
+
+		List<ListEntry> rows = listFeed.getEntries();
+
+		for (String key : results.getResults().keySet()) {
+			for (ListEntry row : rows) {
+				Set<String> tags = row.getCustomElements().getTags();
+				String testsscoreTag = getTagByNumber(week, tags, "testsscore");
+				for (String tag : tags) {
+					if (tag.equals(testsscoreTag)) {
+						// String name = key.substring(0, key.indexOf("@"));
+						// name = name.replace("_", " ");
+						if (row.getCustomElements().getValue("mentee") != null) {
+							if (row.getCustomElements().getValue("mentee")
+									.equals(key)) {
+								row.getCustomElements().setValueLocal(tag,
+										results.getResults().get(key));
+								row.update();
+							}
+						}
+
+					}
+				}
+			}
+		}
 	}
 }

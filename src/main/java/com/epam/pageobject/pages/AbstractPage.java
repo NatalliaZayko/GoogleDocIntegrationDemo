@@ -5,7 +5,7 @@ import org.openqa.selenium.WebDriver;
 import com.epam.driver.Driver;
 
 public abstract class AbstractPage {
-	protected WebDriver webDriver = Driver.getDriver();
+	protected static WebDriver webDriver = Driver.getDriver();
 	
 	public AbstractPage() {
 	}

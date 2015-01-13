@@ -34,7 +34,7 @@ public class ClassMarketMainPage extends AbstractPage {
 	public void login() {
 		
 		loginField.sendKeys(login_name);
-		passwordField.sendKeys(password);
+		passwordField.sendKeys(password);		
 		buttonLogin.click();
 
 	}
