@@ -79,13 +79,6 @@ public class Steps {
 	}
 
 	public static void openResults(String courseRootName, String courseChildName) {
-		// TODO to do wait
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		ClassMarketTestsPage testsPage = new ClassMarketTestsPage();
 		testsPage.openPage();
 		testsPage.openResults(courseRootName, courseChildName);

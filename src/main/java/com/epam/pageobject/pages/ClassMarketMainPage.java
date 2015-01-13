@@ -6,6 +6,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import com.epam.utils.WebDriverWaitUtils;
+
 public class ClassMarketMainPage extends AbstractPage {
 	private final static String PAGE_URL = "http://www.classmarker.com/";
 
@@ -21,6 +23,9 @@ public class ClassMarketMainPage extends AbstractPage {
 
 	@FindBy(xpath = "//input[@class='login-button']")
 	private WebElement buttonLogin;
+	
+	@FindBy(xpath="//span[@class='first']")
+	private WebElement logoDashboard;
 
 	public ClassMarketMainPage() {
 		PageFactory.initElements(webDriver, this);
@@ -36,6 +41,7 @@ public class ClassMarketMainPage extends AbstractPage {
 		loginField.sendKeys(login_name);
 		passwordField.sendKeys(password);		
 		buttonLogin.click();
+		WebDriverWaitUtils.waitForElementVisible(logoDashboard, 10);
 
 	}
 

@@ -121,19 +121,13 @@ public class SpreadsheetUtils {
 			String testsscoreTag = getTagByNumber(week, tags, "testsscore");
 			for (String tag : tags) {
 				if (tag.equals(weekTag)) {
-					if (row.getCustomElements().getValue(tag) != null) {
-						if (row.getCustomElements().getValue(tag)
-								.equals(course)) {
-							if (row.getCustomElements().getValue(testsscoreTag) == null) {
-								String name = row.getCustomElements().getValue(
-										"mentee");
-								if (name != null) {
-									// name = name.replace(" ", "_");
-									// String fullName = new StringBuffer(name)
-									// .append("@epam.com").toString();
-									names.add(name);
-								}
-							}
+					if (row.getCustomElements().getValue(tag) != null
+							&& row.getCustomElements().getValue(tag)
+									.equals(course)) {
+						if (row.getCustomElements().getValue(testsscoreTag) == null) {
+							String name = row.getCustomElements().getValue(
+									"mentee");
+							names.add(name);
 						}
 					}
 				}
@@ -170,15 +164,13 @@ public class SpreadsheetUtils {
 				String testsscoreTag = getTagByNumber(week, tags, "testsscore");
 				for (String tag : tags) {
 					if (tag.equals(testsscoreTag)) {
-						// String name = key.substring(0, key.indexOf("@"));
-						// name = name.replace("_", " ");
-						if (row.getCustomElements().getValue("mentee") != null) {
-							if (row.getCustomElements().getValue("mentee")
-									.equals(key)) {
-								row.getCustomElements().setValueLocal(tag,
-										results.getResults().get(key));
-								row.update();
-							}
+						if (row.getCustomElements().getValue("mentee") != null
+								&& row.getCustomElements().getValue("mentee")
+										.equals(key)) {
+							row.getCustomElements().setValueLocal(tag,
+									results.getResults().get(key));
+							row.update();
+
 						}
 
 					}

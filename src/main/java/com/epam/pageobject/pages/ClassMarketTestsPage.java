@@ -41,7 +41,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 		WebElement childCourse = webDriver.findElement(By.xpath(String.format(
 				BUTTON_RESULT_OF_COURSE, courseChildName)));
 		childCourse.click();
-
+		
 	}
 
 	public HashMapSkin searchResults(List<String> names,
@@ -59,7 +59,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 			}
 
 		}
-
+		
 		for (String name : names) {
 			List<WebElement> dates = webDriver.findElements(By.xpath(String
 					.format(DATE, name)));
@@ -75,7 +75,6 @@ public class ClassMarketTestsPage extends AbstractPage {
 								.xpath(String
 										.format(RESULT, name, dateForXpath)));
 						for (WebElement result : results) {
-							System.out.println(name + "-" + result.getText());
 							hashMapSkin.add(name, result.getText());
 
 						}
@@ -85,8 +84,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 				}
 			}
 
-		}
-		// webDriver.navigate().refresh();
+		}	
 		if (WebDriverWaitUtils.isElementPresent(LINK_NEXT, 5)) {
 
 			linkNext.click();
