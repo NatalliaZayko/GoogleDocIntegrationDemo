@@ -34,6 +34,9 @@ public class GooglePage extends AbstractPage {
 
 	@FindBy(xpath = "//img[@alt='Google']")
 	private WebElement imgGoogle;
+	
+	@FindBy(xpath="//pre[@id='requestResponseContent']")
+	private WebElement req;
 
 	@Override
 	public void openPage() {
@@ -48,7 +51,7 @@ public class GooglePage extends AbstractPage {
 
 	public String getAuthorizeCode() {
 
-		WebDriverWaitUtils.waitForElementVisible(imgGoogle, 10);
+		WebDriverWaitUtils.waitForElementVisible(req, 10);
 		String authorizeCode = authorizeCodeField.getText();
 		authorizeCode = authorizeCode.split(" ")[1];
 		authorizeCode = authorizeCode.substring(authorizeCode.indexOf("=") + 1);

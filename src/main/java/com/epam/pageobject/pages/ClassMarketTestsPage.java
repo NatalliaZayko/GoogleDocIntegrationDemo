@@ -41,7 +41,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 		WebElement childCourse = webDriver.findElement(By.xpath(String.format(
 				BUTTON_RESULT_OF_COURSE, courseChildName)));
 		childCourse.click();
-		
+
 	}
 
 	public HashMapSkin searchResults(List<String> names,
@@ -52,6 +52,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 		for (Entry<String, Calendar> entry : datesFromDoc.entrySet()) {
 			if (entry.getKey().equals("startDate")) {
 				startDate = entry.getValue();
+
 			}
 
 			if (entry.getKey().equals("finishDate")) {
@@ -59,7 +60,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 			}
 
 		}
-		
+
 		for (String name : names) {
 			List<WebElement> dates = webDriver.findElements(By.xpath(String
 					.format(DATE, name)));
@@ -67,6 +68,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 				for (WebElement date : dates) {
 					String date_of_passing = date.getText();
 					Calendar calendar = DateUtils.parserDate(date_of_passing);
+
 					if (DateUtils.isDateInTheRange(startDate, finishDate,
 							calendar)) {
 						String dateForXpath = DateUtils
@@ -75,6 +77,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 								.xpath(String
 										.format(RESULT, name, dateForXpath)));
 						for (WebElement result : results) {
+							System.out.println(name + "-" + result.getText());
 							hashMapSkin.add(name, result.getText());
 
 						}
@@ -84,10 +87,17 @@ public class ClassMarketTestsPage extends AbstractPage {
 				}
 			}
 
-		}	
+		}
+
 		if (WebDriverWaitUtils.isElementPresent(LINK_NEXT, 5)) {
 
 			linkNext.click();
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			searchResults(names, datesFromDoc);
 
 		}

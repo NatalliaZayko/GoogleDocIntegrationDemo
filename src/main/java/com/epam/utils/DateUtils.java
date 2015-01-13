@@ -105,11 +105,14 @@ public class DateUtils {
 	}
 
 	public static String getDateForXpath(Calendar calendar) {
-		String DATE_FORMAT = "dd MMM yy";
+		String DATE_FORMAT = "d MMM yy";
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(
-				DATE_FORMAT);
-		String dateForXpath = sdf.format(calendar.getTime()).substring(0, 7)
-				+ "\'" + sdf.format(calendar.getTime()).substring(7);
+				DATE_FORMAT);		
+		String dateForXpath = new StringBuffer(sdf.format(calendar.getTime()))
+				.insert(sdf.format(calendar.getTime()).length() - 2, "\'")
+				.toString();
+		// String dateForXpath = sdf.format(calendar.getTime()).substring(0, 7)
+		// + "\'" + sdf.format(calendar.getTime()).substring(7);
 		return dateForXpath;
 	}
 }
