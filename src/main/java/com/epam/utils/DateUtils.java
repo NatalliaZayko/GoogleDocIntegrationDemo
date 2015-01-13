@@ -80,23 +80,23 @@ public class DateUtils {
 		return calendar;
 	}
 
-	@SuppressWarnings("deprecation")
 	public static boolean isDateInTheRange(Calendar startDate,
 			Calendar finishDate, Calendar dateOfPassing) {
 
 		if (dateOfPassing.after(startDate)
-				|| ((dateOfPassing.getTime().getYear() == startDate.getTime()
-						.getYear())
-						&& (dateOfPassing.getTime().getMonth() == startDate
-								.getTime().getMonth()) && (dateOfPassing
-						.getTime().getDay() == startDate.getTime().getDay()))) {
+				|| ((dateOfPassing.get(Calendar.YEAR) == startDate
+						.get(Calendar.YEAR))
+						&& (dateOfPassing.get(Calendar.MONTH) == startDate
+								.get(Calendar.MONTH)) && (dateOfPassing
+						.get(Calendar.DAY_OF_MONTH) == startDate
+						.get(Calendar.DAY_OF_MONTH)))) {
 			if (dateOfPassing.before(finishDate)
-					|| ((dateOfPassing.getTime().getYear() == finishDate
-							.getTime().getYear())
-							&& (dateOfPassing.getTime().getMonth() == finishDate
-									.getTime().getMonth()) && (dateOfPassing
-							.getTime().getDay() == finishDate.getTime()
-							.getDay()))) {
+					|| ((dateOfPassing.get(Calendar.YEAR) == finishDate
+							.get(Calendar.YEAR))
+							&& (dateOfPassing.get(Calendar.MONTH) == finishDate
+									.get(Calendar.MONTH)) && (dateOfPassing
+							.get(Calendar.DAY_OF_MONTH) == finishDate
+							.get(Calendar.DAY_OF_MONTH)))) {
 				return true;
 			}
 
