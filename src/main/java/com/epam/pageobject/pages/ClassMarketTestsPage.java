@@ -76,8 +76,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 						List<WebElement> results = webDriver.findElements(By
 								.xpath(String
 										.format(RESULT, name, dateForXpath)));
-						for (WebElement result : results) {
-							System.out.println(name + "-" + result.getText());
+						for (WebElement result : results) {							
 							hashMapSkin.add(name, result.getText());
 
 						}
