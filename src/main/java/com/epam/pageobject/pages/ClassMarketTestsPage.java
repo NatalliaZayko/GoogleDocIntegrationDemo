@@ -82,13 +82,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 
 		if (WebDriverWaitUtils.isElementPresent(LINK_NEXT, 5)) {
 
-			linkNext.click();
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			linkNext.click();		
 			searchResults(names, startDate, finishDate);
 
 		}
