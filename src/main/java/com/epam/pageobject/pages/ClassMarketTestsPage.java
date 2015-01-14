@@ -1,9 +1,8 @@
 package com.epam.pageobject.pages;
 
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -23,6 +22,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 	private final static String RESULT = "//div[@class='col-span-2 graph'][ancestor::li//a[text()='%s']][ancestor::li//div[@class='col-span-2'][text()[contains(.,\"%s\")]]]/span[@class='value']";
 
 	private HashMapSkin hashMapSkin = new HashMapSkin();
+	private HashSet<String> datesSet = new HashSet<String>();;
 
 	private final static String LINK_NEXT = "//a[contains(text(),'Next')]";
 	@FindBy(xpath = LINK_NEXT)
@@ -44,24 +44,10 @@ public class ClassMarketTestsPage extends AbstractPage {
 
 	}
 
-	public HashMapSkin searchResults(List<String> names,
-			Map<String, Calendar> datesFromDoc) {
-		Calendar startDate = null;
-		Calendar finishDate = null;
-
-		for (Entry<String, Calendar> entry : datesFromDoc.entrySet()) {
-			if (entry.getKey().equals("startDate")) {
-				startDate = entry.getValue();
-
-			}
-
-			if (entry.getKey().equals("finishDate")) {
-				finishDate = entry.getValue();
-			}
-
-		}
-
+	public HashMapSkin searchResults(List<String> names, Calendar startDate,
+			Calendar finishDate) {
 		for (String name : names) {
+			datesSet.clear();
 			List<WebElement> dates = webDriver.findElements(By.xpath(String
 					.format(DATE, name)));
 			if (!dates.isEmpty()) {
@@ -73,14 +59,20 @@ public class ClassMarketTestsPage extends AbstractPage {
 							calendar)) {
 						String dateForXpath = DateUtils
 								.getDateForXpath(calendar);
-						List<WebElement> results = webDriver.findElements(By
-								.xpath(String
-										.format(RESULT, name, dateForXpath)));
-						for (WebElement result : results) {							
-							hashMapSkin.add(name, result.getText());
+						if (!datesSet.contains(dateForXpath)
+								|| datesSet.isEmpty()) {
+							datesSet.add(dateForXpath);
+							List<WebElement> results = webDriver
+									.findElements(By.xpath(String.format(
+											RESULT, name, dateForXpath)));
+							for (WebElement result : results) {
+								System.out.println(name + ":"
+										+ result.getText());
+								hashMapSkin.add(name, result.getText());
+
+							}
 
 						}
-
 					}
 
 				}
@@ -97,7 +89,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			searchResults(names, datesFromDoc);
+			searchResults(names, startDate, finishDate);
 
 		}
 

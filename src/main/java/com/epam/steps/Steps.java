@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Map.Entry;
 
 import com.epam.driver.Driver;
 import com.epam.pageobject.pages.ClassMarketMainPage;
@@ -28,13 +29,14 @@ public class Steps {
 	private static SpreadsheetService service = null;
 	private static List<String> names = null;
 	private static HashMapSkin results = null;
+	private static Calendar startDate = null;
+	private static Calendar finishDate = null;
 
 	public static void authorize() {
 		GooglePage googlePage = new GooglePage();
 		googlePage.openPage();
 		googlePage.login();
 		service = SpreadsheetUtils.getService(googlePage.getAuthorizeCode());
-	
 
 	}
 
@@ -44,16 +46,14 @@ public class Steps {
 				spreadsheet_name, service);
 		ListFeed listFeed = SpreadsheetUtils.getListFeed(service, spreadsheet);
 		names = SpreadsheetUtils.getNames(week, course, listFeed);
-	
 
 	}
-	
-	
-	public static void setResults(int week) throws IOException, ServiceException
-	{
+
+	public static void setResults(int week) throws IOException,
+			ServiceException {
 		SpreadsheetEntry spreadsheet = SpreadsheetUtils.getSpreadsheetEntry(
 				spreadsheet_name, service);
-		ListFeed listFeed = SpreadsheetUtils.getListFeed(service, spreadsheet);		
+		ListFeed listFeed = SpreadsheetUtils.getListFeed(service, spreadsheet);
 		SpreadsheetUtils.setResults(results, listFeed, week);
 		Driver.closeDriver();
 	}
@@ -65,10 +65,19 @@ public class Steps {
 		ListFeed listFeed = SpreadsheetUtils.getListFeed(service, spreadsheet);
 		ClassMarketTestsPage testPage = new ClassMarketTestsPage();
 		Map<String, Calendar> dates = DateUtils.getDatesFromDoc(week, listFeed);
-		results =testPage.searchResults(names, dates);
+
+		for (Entry<String, Calendar> entry : dates.entrySet()) {
+			if (entry.getKey().equals("startDate")) {
+				startDate = entry.getValue();
+			}
+			if (entry.getKey().equals("finishDate")) {
+				finishDate = entry.getValue();
+			}
+
+		}
+		results = testPage.searchResults(names, startDate, finishDate);
 		return results;
-				
-		
+
 	}
 
 	public static void loginInClassMarket() {
