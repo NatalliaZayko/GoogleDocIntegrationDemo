@@ -30,7 +30,5 @@ public class MySpreadsheetIntegration {
 		Steps.openResults(courseRootName,courseChildName);		
 		Steps.getResults(week);
 		Steps.setResults(week);
-		
-		
 	}
 }

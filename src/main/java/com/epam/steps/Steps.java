@@ -21,10 +21,8 @@ import com.google.gdata.util.ServiceException;
 
 public class Steps {
 
-	private static ResourceBundle resource = ResourceBundle
-			.getBundle("googleDocs");
-	private static String spreadsheet_name = resource
-			.getString("nameOfDocument");
+	private static ResourceBundle resource = ResourceBundle.getBundle("googleDocs");
+	private static String spreadsheet_name = resource.getString("nameOfDocument");
 
 	private static SpreadsheetService service = null;
 	private static List<String> names = null;
@@ -37,7 +35,6 @@ public class Steps {
 		googlePage.openPage();
 		googlePage.login();
 		service = SpreadsheetUtils.getService(googlePage.getAuthorizeCode());
-
 	}
 
 	public static void getListNames(int week, String course)
@@ -46,7 +43,7 @@ public class Steps {
 				spreadsheet_name, service);
 		ListFeed listFeed = SpreadsheetUtils.getListFeed(service, spreadsheet);
 		names = SpreadsheetUtils.getNames(week, course, listFeed);
-
+		System.out.println();
 	}
 
 	public static void setResults(int week) throws IOException,
@@ -60,10 +57,10 @@ public class Steps {
 
 	public static HashMapSkin getResults(int week) throws IOException,
 			ServiceException {
-		SpreadsheetEntry spreadsheet = SpreadsheetUtils.getSpreadsheetEntry(
-				spreadsheet_name, service);
+		SpreadsheetEntry spreadsheet = SpreadsheetUtils.getSpreadsheetEntry(spreadsheet_name, service);
 		ListFeed listFeed = SpreadsheetUtils.getListFeed(service, spreadsheet);
 		ClassMarketTestsPage testPage = new ClassMarketTestsPage();
+		
 		Map<String, Calendar> dates = DateUtils.getDatesFromDoc(week, listFeed);
 
 		for (Entry<String, Calendar> entry : dates.entrySet()) {
@@ -76,6 +73,8 @@ public class Steps {
 
 		}
 		results = testPage.searchResults(names, startDate, finishDate);
+		
+		
 		return results;
 
 	}

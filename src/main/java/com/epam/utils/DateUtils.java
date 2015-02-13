@@ -30,24 +30,43 @@ public class DateUtils {
 			ListFeed listFeed) {
 		Map<String, Calendar> dates = new HashMap<String, Calendar>();
 		List<ListEntry> rows = listFeed.getEntries();
+		
 		Set<String> tags = rows.get(0).getCustomElements().getTags();
+		
 		String weekTag = SpreadsheetUtils.getTagByNumber(week, tags, "week");
 		String date = weekTag.split("week")[1];
+		
+		//int currentYear = getCurrentYear();
 
-		int currentYear = getCurrentYear();
-
-		int monthFirst = Integer.parseInt(date.subSequence(0, 2).toString()) - 1;
+		int monthFirst = Integer.parseInt(date.subSequence(0, 2).toString());
 		int dayFirst = Integer.parseInt(date.subSequence(2, 4).toString());
 		Calendar startDate = Calendar.getInstance(TimeZone.getDefault(),
 				Locale.getDefault());
 		// startDate.set(currentYear, monthFirst, dayFirst);
-		startDate.set(2014, monthFirst, dayFirst);
-		int monthLast = Integer.parseInt(date.subSequence(5, 7).toString()) - 1;
+		
+		
+		
+		
+		//ERROR HERE!!!
+		startDate.set(2012, monthFirst, dayFirst);
+		
+		
+		
+		
+		int monthLast = Integer.parseInt(date.subSequence(5, 7).toString());
 		int dayLast = Integer.parseInt(date.subSequence(7, 9).toString());
 		Calendar finishDate = Calendar.getInstance(TimeZone.getDefault(),
 				Locale.getDefault());
 		// finishDate.set(currentYear, monthLast, dayLast);
-		finishDate.set(2014, monthLast, dayLast);
+		
+		
+		///AND HERE!!!
+		finishDate.set(2012, monthLast, dayLast);
+		
+		
+		
+		
+		
 		dates.put("startDate", startDate);
 		dates.put("finishDate", finishDate);
 

@@ -44,30 +44,32 @@ public class ClassMarketTestsPage extends AbstractPage {
 
 	}
 
+	//ERROR HERE!!!
 	public HashMapSkin searchResults(List<String> names, Calendar startDate,
 			Calendar finishDate) {
 		for (String name : names) {
 			datesSet.clear();
-			List<WebElement> dates = webDriver.findElements(By.xpath(String
-					.format(DATE, name)));
+			
+			List<WebElement> dates = webDriver.findElements(By.xpath(String.format(DATE, name)));
+			
 			if (!dates.isEmpty()) {
 				for (WebElement date : dates) {
 					String date_of_passing = date.getText();
+					
 					Calendar calendar = DateUtils.parserDate(date_of_passing);
 
-					if (DateUtils.isDateInTheRange(startDate, finishDate,
-							calendar)) {
-						String dateForXpath = DateUtils
-								.getDateForXpath(calendar);
-						if (!datesSet.contains(dateForXpath)
-								|| datesSet.isEmpty()) {
+					if (DateUtils.isDateInTheRange(startDate, finishDate, calendar)) {
+						
+						String dateForXpath = DateUtils.getDateForXpath(calendar);
+						
+						if (!datesSet.contains(dateForXpath)|| datesSet.isEmpty()) {
+							
 							datesSet.add(dateForXpath);
-							List<WebElement> results = webDriver
-									.findElements(By.xpath(String.format(
-											RESULT, name, dateForXpath)));
+							
+							List<WebElement> results = webDriver.findElements(
+									By.xpath(String.format(RESULT, name, dateForXpath)));
+							
 							for (WebElement result : results) {
-								System.out.println(name + ":"
-										+ result.getText());
 								hashMapSkin.add(name, result.getText());
 
 							}

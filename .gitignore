@@ -1,2 +1,11 @@
 users.properties
 googleCredentials.properties
+/target/
+
+.settings/
+.project
+.classpath
+
+/resources/
+/test/
+src/main/resources/
