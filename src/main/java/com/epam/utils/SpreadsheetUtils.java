@@ -5,6 +5,7 @@ import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -32,7 +33,9 @@ public class SpreadsheetUtils {
 	private static String redirect_url = resource.getString("redirect_url");
 	private final static String SCOPE = "https://spreadsheets.google.com/feeds https://docs.google.com/feeds ";;
 	private final static String SPREADSHEETFEED_URL = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
-
+	private static ListFeed listFeed;
+	
+	
 	private static GoogleAuthorizationCodeFlow getFlow() {
 
 		HttpTransport httpTransport = null;
@@ -105,7 +108,7 @@ public class SpreadsheetUtils {
 
 		WorksheetEntry worksheet = spreadsheet.getWorksheets().get(0);
 		URL listFeedUrl = worksheet.getListFeedUrl();
-		ListFeed listFeed = service.getFeed(listFeedUrl, ListFeed.class);
+		listFeed = service.getFeed(listFeedUrl, ListFeed.class);
 		return listFeed;
 
 	}
@@ -122,13 +125,17 @@ public class SpreadsheetUtils {
 			for (String tag : tags) {
 				if (tag.equals(weekTag)) {
 					if (row.getCustomElements().getValue(tag) != null
-							&& row.getCustomElements().getValue(tag)
-									.equals(course)) {
-						if (row.getCustomElements().getValue(testsscoreTag) == null) {
+							&& row.getCustomElements().getValue(tag).equals(course)) 
+							{
+								
+//this check is not needed because 
+//it doesn't allow to refresh test score
+//						if (row.getCustomElements().getValue(testsscoreTag) == null) {
+								
 							String name = row.getCustomElements().getValue(
 									"mentee");
 							names.add(name);
-						}
+//						}
 					}
 				}
 			}
@@ -138,8 +145,7 @@ public class SpreadsheetUtils {
 		return names;
 	}
 
-	public static String getTagByNumber(int week, Set<String> tags,
-			String partOftagName) {
+	public static String getTagByNumber(int week, Set<String> tags, String partOftagName) {
 		int i = 0;
 		for (String tag : tags) {
 			if (tag.contains(partOftagName)) {
@@ -147,6 +153,7 @@ public class SpreadsheetUtils {
 
 					return tag;
 				}
+				
 				i++;
 			}
 		}
@@ -161,21 +168,44 @@ public class SpreadsheetUtils {
 		for (String key : results.getResults().keySet()) {
 			for (ListEntry row : rows) {
 				Set<String> tags = row.getCustomElements().getTags();
+				
 				String testsscoreTag = getTagByNumber(week, tags, "testsscore");
 				for (String tag : tags) {
 					if (tag.equals(testsscoreTag)) {
 						if (row.getCustomElements().getValue("mentee") != null
-								&& row.getCustomElements().getValue("mentee")
-										.equals(key)) {
-							row.getCustomElements().setValueLocal(tag,
+								&& row.getCustomElements().getValue("mentee").equals(key)) {
+							
+							row.getCustomElements().setValueLocal(tag, 
 									results.getResults().get(key));
 							row.update();
-
+							
 						}
-
 					}
 				}
 			}
 		}
 	}
+	
+	
+	
+	//--------------
+	//gets Set of lectures by week number
+	//it's used to define all mentees for one lecture 
+	public static Set<String> getSetOfTestsByWeek (int week) {
+		//HashSet<String> lectures = new HashSet<String>();
+		Set<String> lectures = new HashSet<String>();
+		List<ListEntry> rows = listFeed.getEntries();
+		
+		for (ListEntry row : rows) {
+			Set<String> tags = row.getCustomElements().getTags();
+			String weekTag = getTagByNumber(week, tags, "week");
+			String lecture = row.getCustomElements().getValue(weekTag);
+			if(lecture != null) {
+				lectures.add(lecture.toLowerCase());
+			}
+		}
+		
+		return lectures;
+	}
+	
 }

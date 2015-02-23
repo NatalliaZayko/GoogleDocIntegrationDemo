@@ -27,6 +27,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 	private final static String LINK_NEXT = "//a[contains(text(),'Next')]";
 	@FindBy(xpath = LINK_NEXT)
 	private WebElement linkNext;
+	
 
 	public ClassMarketTestsPage() {
 		PageFactory.initElements(webDriver, this);
@@ -58,7 +59,8 @@ public class ClassMarketTestsPage extends AbstractPage {
 					
 					Calendar calendar = DateUtils.parserDate(date_of_passing);
 
-					if (DateUtils.isDateInTheRange(startDate, finishDate, calendar)) {
+	// reffering to date is not needed anymore
+	//				if (DateUtils.isDateInTheRange(startDate, finishDate, calendar)) {
 						
 						String dateForXpath = DateUtils.getDateForXpath(calendar);
 						
@@ -75,7 +77,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 							}
 
 						}
-					}
+	//				}
 
 				}
 			}

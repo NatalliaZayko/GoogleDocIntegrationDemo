@@ -7,6 +7,7 @@ public class HashMapSkin {
 	
 	private Map<String,String> results;
 
+	
 	public HashMapSkin() {		
 		results = new HashMap<String, String>();
 	}
