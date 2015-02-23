@@ -28,7 +28,7 @@ public class Driver {
 	
 	public static void closeDriver(){
 		instance.webDriver.quit();
-		instance.webDriver = null;
+		instance = null;
 	}
 	
 }
