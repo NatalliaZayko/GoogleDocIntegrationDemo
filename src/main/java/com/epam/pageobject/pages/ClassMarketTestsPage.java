@@ -19,7 +19,7 @@ public class ClassMarketTestsPage extends AbstractPage {
 	private final static String PARENT_COURSE_XPATH = "//.[@class='test-name name'][text()='%s']";
 	private final static String BUTTON_RESULT_OF_COURSE = "//div[ancestor::li/div/p[text()='%s']]/a[text()='Results']";
 	private final static String DATE = "//div[@class='col-span-2'][ancestor::li//a[text()='%s']]";
-	private final static String RESULT = "//div[@class='col-span-2 graph'][ancestor::li//a[text()='%s']][ancestor::li//div[@class='col-span-2'][text()[contains(.,\"%s\")]]]/span[@class='value']";
+	private final static String RESULT = "//div[@class='col-span-2 graph'][ancestor::li//a[text()='%s']]/span[@class='value']";
 
 	private HashMapSkin hashMapSkin = new HashMapSkin();
 	private HashSet<String> datesSet = new HashSet<String>();;
@@ -73,7 +73,6 @@ public class ClassMarketTestsPage extends AbstractPage {
 							
 							for (WebElement result : results) {
 								hashMapSkin.add(name, result.getText());
-
 							}
 
 						}
@@ -88,6 +87,26 @@ public class ClassMarketTestsPage extends AbstractPage {
 
 			linkNext.click();		
 			searchResults(names, startDate, finishDate);
+
+		}
+
+		return hashMapSkin;
+
+	}
+	
+	public HashMapSkin searchResults(List<String> names) {
+		for (String name : names) {
+			List<WebElement> results = webDriver.findElements(By.xpath(String.format(RESULT, name)));
+							
+			for (WebElement result : results) {
+				hashMapSkin.add(name, result.getText());
+			}
+		}
+
+		if (WebDriverWaitUtils.isElementPresent(LINK_NEXT, 5)) {
+
+			linkNext.click();		
+			searchResults(names);
 
 		}
 

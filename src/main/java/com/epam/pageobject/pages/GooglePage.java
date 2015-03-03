@@ -1,21 +1,28 @@
 package com.epam.pageobject.pages;
 
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import com.epam.steps.Steps;
 import com.epam.utils.SpreadsheetUtils;
 import com.epam.utils.WebDriverWaitUtils;
 
 public class GooglePage extends AbstractPage {
 	private static String PAGE_URL = SpreadsheetUtils.getUrlForCode();
 
-	private ResourceBundle resource = ResourceBundle.getBundle("users");
-	private String login_name = resource.getString("loginGoogleDocs");
-	private String password = resource.getString("passwordGoogleDocs");
-
+//	private ResourceBundle resource = ResourceBundle.getBundle("users");
+//	private String login_name = resource.getString("loginGoogleDocs");
+//	private String password = resource.getString("passwordGoogleDocs");
+	private static String propertiesFileName = "users.properties";
+	private static Properties resource = Steps.getPropertyFile(propertiesFileName);
+	private String login_name = resource.getProperty("loginGoogleDocs");
+	private String password = resource.getProperty("passwordGoogleDocs");
+	
+	
 	public GooglePage() {
 		PageFactory.initElements(webDriver, this);
 	}
@@ -37,6 +44,9 @@ public class GooglePage extends AbstractPage {
 	
 	@FindBy(xpath="//pre[@id='requestResponseContent']")
 	private WebElement req;
+	
+	@FindBy(xpath="//*[@id='submit_approve_access']")
+	private WebElement accessButton;
 
 	@Override
 	public void openPage() {
@@ -50,7 +60,6 @@ public class GooglePage extends AbstractPage {
 	}
 
 	public String getAuthorizeCode() {
-
 		WebDriverWaitUtils.waitForElementVisible(req, 10);
 		String authorizeCode = authorizeCodeField.getText();
 		authorizeCode = authorizeCode.split(" ")[1];

@@ -15,7 +15,7 @@ public class MySpreadsheetIntegration {
 
 	public static void main(String[] args) throws AuthenticationException,
 			MalformedURLException, IOException, ServiceException,
-			GeneralSecurityException {
+			GeneralSecurityException, InterruptedException {
 		Scanner in = new Scanner(System.in);
 		//System.out.println("Course:");
 		//String course = in.nextLine();		
@@ -37,14 +37,25 @@ public class MySpreadsheetIntegration {
 			setOfTests.add(associations.get(string));
 		}
 		
+		String stringToRemove = null;
+		setOfTests.remove(stringToRemove);
+		
 		for (String test : setOfTests) {
-			Steps.getListNames(week, test);
+			String module = null;
+			for (Map.Entry<String, String> entry : associations.entrySet()) {
+				if(entry.getValue().equals(test)) {
+					module = entry.getKey();
+				}
+			}
+			
+			Steps.getListNames(week, module);
 			String testRootName = test.substring(0,test.indexOf("/"));
 			String testChildName = test.substring(test.indexOf("/") + 1);
 			Steps.openResults(testRootName,testChildName);		
 			Steps.getResults(week);
 			Steps.setResults(week);
 		}
+		//Steps.executeScript();
 		Steps.closeBrowser();
 		
 	}

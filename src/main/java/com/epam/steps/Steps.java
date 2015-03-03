@@ -1,20 +1,21 @@
 package com.epam.steps;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import com.epam.driver.Driver;
 import com.epam.pageobject.pages.ClassMarketMainPage;
 import com.epam.pageobject.pages.ClassMarketTestsPage;
 import com.epam.pageobject.pages.GooglePage;
-import com.epam.utils.DateUtils;
+import com.epam.pageobject.pages.GoogleSheetsPage;
 import com.epam.utils.HashMapSkin;
 import com.epam.utils.SpreadsheetUtils;
 import com.google.gdata.client.spreadsheet.SpreadsheetService;
@@ -25,16 +26,14 @@ import com.google.gdata.util.ServiceException;
 
 public class Steps {
 
-	private static ResourceBundle resource = ResourceBundle.getBundle("googleDocs");
-	private static String spreadsheet_name = resource.getString("nameOfDocument");
-	private static String associations_spreadsheet = 
-			resource.getString("nameOfAssociationsDocument");
-
+	private static String propertiesFileName = "googleDocs.properties";
+	private static Properties resource = Steps.getPropertyFile(propertiesFileName);
+	private static String spreadsheet_name = resource.getProperty("nameOfDocument");
+	private static String associations_spreadsheet = resource.getProperty("nameOfAssociationsDocument");
+	
 	private static SpreadsheetService service = null;
 	private static List<String> names = null;
 	private static HashMapSkin results = null;
-	private static Calendar startDate = null;
-	private static Calendar finishDate = null;
 	private static ListFeed listFeed = null;
 	private static SpreadsheetEntry spreadsheet = null;
 
@@ -61,28 +60,11 @@ public class Steps {
 		
 	}
 
-	public static HashMapSkin getResults(int week) throws IOException,
-			ServiceException {
-		SpreadsheetEntry spreadsheet = SpreadsheetUtils.getSpreadsheetEntry(spreadsheet_name, service);
-		ListFeed listFeed = SpreadsheetUtils.getListFeed(service, spreadsheet);
+	public static HashMapSkin getResults(int week) throws IOException, ServiceException {
 		ClassMarketTestsPage testPage = new ClassMarketTestsPage();
-		
-		Map<String, Calendar> dates = DateUtils.getDatesFromDoc(week, listFeed);
-
-		for (Entry<String, Calendar> entry : dates.entrySet()) {
-			if (entry.getKey().equals("startDate")) {
-				startDate = entry.getValue();
-			}
-			if (entry.getKey().equals("finishDate")) {
-				finishDate = entry.getValue();
-			}
-
-		}
-		results = testPage.searchResults(names, startDate, finishDate);
-		
+		results = testPage.searchResults(names);
 		
 		return results;
-
 	}
 
 	public static void loginInClassMarket() {
@@ -122,7 +104,7 @@ public class Steps {
 		for (ListEntry row : rows) {
 			String module = row.getCustomElements().getValue("modulename");
 			String test = row.getCustomElements().getValue("testfolder");
-			associations.put(module.toLowerCase(), test);
+			associations.put(module, test);
 		}
 		
 		List<String> entriesToRemove = new ArrayList<String>();
@@ -132,17 +114,40 @@ public class Steps {
 			}
 		}
 		
-		
 		for (String string : entriesToRemove) {
 			associations.remove(string);
 		}
 		
 		
-		for (Map.Entry<String, String> entry : associations.entrySet()) {
-			System.out.println(entry.getKey() + "      " + entry.getValue());
+		return associations;
+	}
+
+	public static void executeScript() throws InterruptedException {
+		GoogleSheetsPage googleSheetsPage = new GoogleSheetsPage();
+		googleSheetsPage.executeGScript();
+	}
+	
+	
+	public static Properties getPropertyFile(String file) {
+		Properties prop = new Properties();
+		InputStream input = null;
+		
+		try {
+			input = new FileInputStream("C:\\Users\\Dzmitry_Halaveika\\workspace\\Google\\src\\main\\resources\\" + file);
+			prop.load(input);
+			
+			input.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		
-		return associations;
+		
+		return prop;
 	}
+	
 }

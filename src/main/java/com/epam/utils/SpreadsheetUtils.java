@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ResourceBundle;
+import java.util.Properties;
 import java.util.Set;
 
+import com.epam.steps.Steps;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
@@ -26,14 +27,17 @@ import com.google.gdata.util.ServiceException;
 
 public class SpreadsheetUtils {
 
-	private static ResourceBundle resource = ResourceBundle
-			.getBundle("googleCredentials");
-	private static String client_id = resource.getString("client_id");
-	private static String client_secret = resource.getString("client_secret");
-	private static String redirect_url = resource.getString("redirect_url");
+	private static String propertiesFileName = "googleCredentials.properties";
+	private static Properties resource = Steps.getPropertyFile(propertiesFileName);
+	private static String client_id = resource.getProperty("client_id");
+	private static String client_secret = resource.getProperty("client_secret");
+	private static String redirect_url = resource.getProperty("redirect_url");
+	
 	private final static String SCOPE = "https://spreadsheets.google.com/feeds https://docs.google.com/feeds ";;
 	private final static String SPREADSHEETFEED_URL = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
 	private static ListFeed listFeed;
+	
+	
 	
 	
 	private static GoogleAuthorizationCodeFlow getFlow() {
@@ -121,7 +125,7 @@ public class SpreadsheetUtils {
 		for (ListEntry row : rows) {
 			Set<String> tags = row.getCustomElements().getTags();
 			String weekTag = getTagByNumber(week, tags, "week");
-			String testsscoreTag = getTagByNumber(week, tags, "testsscore");
+	//		String testsscoreTag = getTagByNumber(week, tags, "testsscore");
 			for (String tag : tags) {
 				if (tag.equals(weekTag)) {
 					if (row.getCustomElements().getValue(tag) != null
@@ -201,11 +205,14 @@ public class SpreadsheetUtils {
 			String weekTag = getTagByNumber(week, tags, "week");
 			String lecture = row.getCustomElements().getValue(weekTag);
 			if(lecture != null) {
-				lectures.add(lecture.toLowerCase());
+				lectures.add(lecture);
 			}
 		}
 		
 		return lectures;
 	}
+	
+	
+	
 	
 }

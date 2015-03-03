@@ -1,19 +1,25 @@
 package com.epam.pageobject.pages;
 
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import com.epam.steps.Steps;
 import com.epam.utils.WebDriverWaitUtils;
 
 public class ClassMarketMainPage extends AbstractPage {
 	private final static String PAGE_URL = "http://www.classmarker.com/";
-
-	private ResourceBundle resource = ResourceBundle.getBundle("users");
-	private String login_name = resource.getString("loginClassMarket");
-	private String password = resource.getString("passwordClassMarket");
+	
+	private static String propertiesFileName = "users.properties";
+	private static Properties resource = Steps.getPropertyFile(propertiesFileName);
+	
+//	private static String currentDir = System.getProperty("user.dir");
+//	private ResourceBundle resource = ResourceBundle.getBundle( currentDir + "\\users");
+	private String login_name = resource.getProperty("loginClassMarket");
+	private String password = resource.getProperty("passwordClassMarket");
 
 	@FindBy(xpath = "//*[@id='un']")
 	private WebElement loginField;
