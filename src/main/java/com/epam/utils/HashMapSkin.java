@@ -13,20 +13,24 @@ public class HashMapSkin {
 	}
 	
 	public void add(String key, String value){
-		
-		
-		if(!results.isEmpty()){
-			if(results.containsKey(key)){
-				String actualValue = results.get(key);
-				double v1 = Double.parseDouble(value.substring(0, value.length() - 1));
-				double v2 = Double.parseDouble(actualValue.substring(0, actualValue.length() - 1));
-				if(v1 > v2){
+		if(results.containsKey(key)){
+			String actualValue = results.get(key);
+			double existingTestScore = -1;
+			double newTestScore = -1;
+			try {
+				newTestScore= Double.parseDouble(value.substring(0, value.length() - 1));
+				existingTestScore = Double.parseDouble(actualValue.substring(0, actualValue.length() - 1));
+			} catch (NumberFormatException e){
+				if(newTestScore != -1) {
 					results.put(key, value);
 				}
-			} else {
+				
+				return;
+			}
+			if(existingTestScore < newTestScore ){
 				results.put(key, value);
 			}
-		}else {
+		} else {
 			results.put(key, value);
 		}
 	}
