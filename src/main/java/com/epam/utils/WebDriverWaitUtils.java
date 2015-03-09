@@ -65,7 +65,6 @@ public class WebDriverWaitUtils {
 		WebDriverWait driverWait = new WebDriverWait(webDriver, time);
 		driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By
 				.xpath(elementLocator)));
-
 	}
 
 }

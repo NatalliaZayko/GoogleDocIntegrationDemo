@@ -1,7 +1,5 @@
 package com.epam.pageobject.pages;
 
-import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -9,7 +7,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import com.epam.utils.DateUtils;
 import com.epam.utils.HashMapSkin;
 import com.epam.utils.WebDriverWaitUtils;
 
@@ -18,11 +15,13 @@ public class ClassMarketTestsPage extends AbstractPage {
 	private static String PAGE_URL = "http://www.classmarker.com/a/tests/";
 	private final static String PARENT_COURSE_XPATH = "//.[@class='test-name name'][text()='%s']";
 	private final static String BUTTON_RESULT_OF_COURSE = "//div[ancestor::li/div/p[text()='%s']]/a[text()='Results']";
-	private final static String DATE = "//div[@class='col-span-2'][ancestor::li//a[text()='%s']]";
-	private final static String RESULT = "//div[@class='col-span-2 graph'][ancestor::li//a[text()='%s']]/span[@class='value']";
+	//private final static String RESULT = "//div[@class='col-span-2 graph'][ancestor::li//a[text()='%s']]/span[@class='value']";
+	
+	private final static String RESULT_ROW = "//*[@id='content']/div/div[@class='table']/ul/li";
+	private final static String NAME = ".//div/div[1]/p/a";
+	private final static String RESULT = ".//span[@class='value']";
 
 	private HashMapSkin hashMapSkin = new HashMapSkin();
-	private HashSet<String> datesSet = new HashSet<String>();;
 
 	private final static String LINK_NEXT = "//a[contains(text(),'Next')]";
 	@FindBy(xpath = LINK_NEXT)
@@ -45,61 +44,23 @@ public class ClassMarketTestsPage extends AbstractPage {
 
 	}
 
-	//ERROR HERE!!!
-	public HashMapSkin searchResults(List<String> names, Calendar startDate,
-			Calendar finishDate) {
-		for (String name : names) {
-			datesSet.clear();
-			
-			List<WebElement> dates = webDriver.findElements(By.xpath(String.format(DATE, name)));
-			
-			if (!dates.isEmpty()) {
-				for (WebElement date : dates) {
-					String date_of_passing = date.getText();
-					
-					Calendar calendar = DateUtils.parserDate(date_of_passing);
-
-	// reffering to date is not needed anymore
-	//				if (DateUtils.isDateInTheRange(startDate, finishDate, calendar)) {
-						
-						String dateForXpath = DateUtils.getDateForXpath(calendar);
-						
-						if (!datesSet.contains(dateForXpath)|| datesSet.isEmpty()) {
-							
-							datesSet.add(dateForXpath);
-							
-							List<WebElement> results = webDriver.findElements(
-									By.xpath(String.format(RESULT, name, dateForXpath)));
-							
-							for (WebElement result : results) {
-								hashMapSkin.add(name, result.getText());
-							}
-
-						}
-	//				}
-
-				}
-			}
-
-		}
-
-		if (WebDriverWaitUtils.isElementPresent(LINK_NEXT, 5)) {
-
-			linkNext.click();		
-			searchResults(names, startDate, finishDate);
-
-		}
-
-		return hashMapSkin;
-
-	}
 	
 	public HashMapSkin searchResults(List<String> names) {
+		
+		List<WebElement> resultRows = webDriver.findElements(By.xpath(RESULT_ROW));
+		
 		for (String name : names) {
-			List<WebElement> results = webDriver.findElements(By.xpath(String.format(RESULT, name)));
-							
-			for (WebElement result : results) {
-				hashMapSkin.add(name, result.getText());
+			String nameOnGoogleSheets = name.toLowerCase().trim();
+			String nameOnClassMarker = null;
+			
+			for (WebElement result : resultRows) {
+				WebElement nameElement = result.findElement(By.xpath(NAME));
+				nameOnClassMarker = nameElement.getText().toLowerCase().trim();
+				
+				if (nameOnGoogleSheets.equals(nameOnClassMarker)) {
+					String percent = result.findElement(By.xpath(RESULT)).getText();
+					hashMapSkin.add(name, percent);
+				}
 			}
 		}
 
@@ -113,6 +74,8 @@ public class ClassMarketTestsPage extends AbstractPage {
 		return hashMapSkin;
 
 	}
+	
+
 
 	@Override
 	public void openPage() {

@@ -42,6 +42,7 @@ public class Steps {
 		googlePage.openPage();
 		googlePage.login();
 		service = SpreadsheetUtils.getService(googlePage.getAuthorizeCode());
+		
 		spreadsheet = SpreadsheetUtils.getSpreadsheetEntry(spreadsheet_name, service);
 		listFeed = SpreadsheetUtils.getListFeed(service, spreadsheet);
 	}

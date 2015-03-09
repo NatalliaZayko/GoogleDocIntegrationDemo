@@ -1,8 +1,9 @@
 package com.epam.pageobject.pages;
 
 import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -14,9 +15,7 @@ import com.epam.utils.WebDriverWaitUtils;
 public class GooglePage extends AbstractPage {
 	private static String PAGE_URL = SpreadsheetUtils.getUrlForCode();
 
-//	private ResourceBundle resource = ResourceBundle.getBundle("users");
-//	private String login_name = resource.getString("loginGoogleDocs");
-//	private String password = resource.getString("passwordGoogleDocs");
+
 	private static String propertiesFileName = "users.properties";
 	private static Properties resource = Steps.getPropertyFile(propertiesFileName);
 	private String login_name = resource.getProperty("loginGoogleDocs");
@@ -58,8 +57,17 @@ public class GooglePage extends AbstractPage {
 		passwordField.sendKeys(password);
 		signInButton.click();
 	}
+	
 
 	public String getAuthorizeCode() {
+		//accepting access to Google Sheets
+		webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		try {
+			accessButton.click();
+		} catch (NoSuchElementException e) {
+			System.out.println("No acception needed");
+		}
+		
 		WebDriverWaitUtils.waitForElementVisible(req, 10);
 		String authorizeCode = authorizeCodeField.getText();
 		authorizeCode = authorizeCode.split(" ")[1];
