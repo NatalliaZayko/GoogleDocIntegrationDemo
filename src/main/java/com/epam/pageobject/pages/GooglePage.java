@@ -63,9 +63,12 @@ public class GooglePage extends AbstractPage {
 		//accepting access to Google Sheets
 		webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		try {
+			Thread.sleep(10000);
 			accessButton.click();
 		} catch (NoSuchElementException e) {
 			System.out.println("No acception needed");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		
 		WebDriverWaitUtils.waitForElementVisible(req, 10);
