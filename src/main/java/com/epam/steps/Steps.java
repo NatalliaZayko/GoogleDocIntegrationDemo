@@ -42,7 +42,6 @@ public class Steps {
 		googlePage.openPage();
 		googlePage.login();
 		service = SpreadsheetUtils.getService(googlePage.getAuthorizeCode());
-		
 		spreadsheet = SpreadsheetUtils.getSpreadsheetEntry(spreadsheet_name, service);
 		listFeed = SpreadsheetUtils.getListFeed(service, spreadsheet);
 	}
@@ -58,7 +57,6 @@ public class Steps {
 	public static void setResults(int week) throws IOException,
 			ServiceException {
 		SpreadsheetUtils.setResults(results, listFeed, week);
-		
 	}
 
 	public static HashMapSkin getResults(int week) throws IOException, ServiceException {
@@ -103,8 +101,11 @@ public class Steps {
 		List<ListEntry> rows = listFeed.getEntries();
 		
 		for (ListEntry row : rows) {
-			String module = row.getCustomElements().getValue("modulename");
+			String module = row.getCustomElements().getValue("modulename").trim();
 			String test = row.getCustomElements().getValue("testfolder");
+			if (test != null) {
+				test.trim();
+			}
 			associations.put(module, test);
 		}
 		

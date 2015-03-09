@@ -125,21 +125,14 @@ public class SpreadsheetUtils {
 		for (ListEntry row : rows) {
 			Set<String> tags = row.getCustomElements().getTags();
 			String weekTag = getTagByNumber(week, tags, "week");
-	//		String testsscoreTag = getTagByNumber(week, tags, "testsscore");
 			for (String tag : tags) {
 				if (tag.equals(weekTag)) {
-					if (row.getCustomElements().getValue(tag) != null
-							&& row.getCustomElements().getValue(tag).equals(course)) 
-							{
-								
-//this check is not needed because 
-//it doesn't allow to refresh test score
-//						if (row.getCustomElements().getValue(testsscoreTag) == null) {
-								
-							String name = row.getCustomElements().getValue(
-									"mentee");
+					if (row.getCustomElements().getValue(tag) != null) {
+						String courseTrimmed = row.getCustomElements().getValue(tag).trim();
+						if(courseTrimmed.equals(course)) {
+							String name = row.getCustomElements().getValue("mentee");
 							names.add(name);
-//						}
+						}
 					}
 				}
 			}
@@ -205,6 +198,7 @@ public class SpreadsheetUtils {
 			String weekTag = getTagByNumber(week, tags, "week");
 			String lecture = row.getCustomElements().getValue(weekTag);
 			if(lecture != null) {
+				lecture = lecture.trim();
 				lectures.add(lecture);
 			}
 		}

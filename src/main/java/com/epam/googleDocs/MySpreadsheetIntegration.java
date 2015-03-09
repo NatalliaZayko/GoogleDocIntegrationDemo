@@ -34,11 +34,18 @@ public class MySpreadsheetIntegration {
 		Map<String, String> associations = Steps.getAssociations();
 		
 		for (String string : setOfModules) {
-			setOfTests.add(associations.get(string));
+			String test = associations.get(string);
+			
+			if (test != null) {
+				test.trim();
+			}
+			
+			setOfTests.add(test);
 		}
 		
 		String stringToRemove = null;
 		setOfTests.remove(stringToRemove);
+		
 		
 		for (String test : setOfTests) {
 			String module = null;
