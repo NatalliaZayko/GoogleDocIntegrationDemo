@@ -1,8 +1,6 @@
 package com.epam.pageobject.pages;
 
 import java.util.Properties;
-import java.util.ResourceBundle;
-
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;

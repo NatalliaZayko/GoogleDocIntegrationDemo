@@ -15,7 +15,6 @@ import com.epam.driver.Driver;
 import com.epam.pageobject.pages.ClassMarketMainPage;
 import com.epam.pageobject.pages.ClassMarketTestsPage;
 import com.epam.pageobject.pages.GooglePage;
-import com.epam.pageobject.pages.GoogleSheetsPage;
 import com.epam.utils.HashMapSkin;
 import com.epam.utils.SpreadsheetUtils;
 import com.google.gdata.client.spreadsheet.SpreadsheetService;
@@ -40,10 +39,19 @@ public class Steps {
 	public static void authorize() throws IOException, ServiceException {
 		GooglePage googlePage = new GooglePage();
 		googlePage.openPage();
+		System.out.println();
+		System.out.println("Logging on Google...");
 		googlePage.login();
+		System.out.println("Logged on Google...");
+		System.out.println();
+		
 		service = SpreadsheetUtils.getService(googlePage.getAuthorizeCode());
+		System.out.println("Getting authorization code on developers.google.com ...");
+		
 		spreadsheet = SpreadsheetUtils.getSpreadsheetEntry(spreadsheet_name, service);
 		listFeed = SpreadsheetUtils.getListFeed(service, spreadsheet);
+		System.out.println("Connection to Google Sheets established...");
+		System.out.println();
 	}
 
 	public static void getListNames(int week, String course)
@@ -52,16 +60,30 @@ public class Steps {
 				spreadsheet_name, service);
 		ListFeed listFeed = SpreadsheetUtils.getListFeed(service, spreadsheet);
 		names = SpreadsheetUtils.getNames(week, course, listFeed);
+		System.out.println("Getting results for:");
+		for (String string : names) {
+			System.out.println(string);
+		}
+		System.out.println();
 	}
 
 	public static void setResults(int week) throws IOException,
 			ServiceException {
+		System.out.println();
+		System.out.println("Setting results to your GoogleSheets document...");
+		System.out.println();
 		SpreadsheetUtils.setResults(results, listFeed, week);
 	}
 
 	public static HashMapSkin getResults(int week) throws IOException, ServiceException {
 		ClassMarketTestsPage testPage = new ClassMarketTestsPage();
 		results = testPage.searchResults(names);
+		
+		System.out.println("The results are:");
+		Map<String, String> showResultsMap = results.getResults();
+		for (Map.Entry<String, String> entry : showResultsMap.entrySet()) {
+			System.out.println(String.format("%-50s%10s", entry.getKey(), entry.getValue()));
+		}
 		
 		return results;
 	}
@@ -70,7 +92,10 @@ public class Steps {
 
 		ClassMarketMainPage mainPage = new ClassMarketMainPage();
 		mainPage.openPage();
+		System.out.println("Logging on classmarker.com  ...");
 		mainPage.login();
+		System.out.println("Logged on classmarker.com  ...");
+		System.out.println();
 	}
 
 	public static void openResults(String courseRootName, String courseChildName) {
@@ -124,10 +149,6 @@ public class Steps {
 		return associations;
 	}
 
-	public static void executeScript() throws InterruptedException {
-		GoogleSheetsPage googleSheetsPage = new GoogleSheetsPage();
-		googleSheetsPage.executeGScript();
-	}
 	
 	
 	public static Properties getPropertyFile(String file) {
@@ -135,7 +156,7 @@ public class Steps {
 		InputStream input = null;
 		
 		try {
-			input = new FileInputStream("C:\\Users\\Dzmitry_Halaveika\\workspace\\Google\\src\\main\\resources\\" + file);
+			input = new FileInputStream(file);
 			prop.load(input);
 			
 			input.close();

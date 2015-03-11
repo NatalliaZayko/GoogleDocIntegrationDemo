@@ -1,8 +1,6 @@
 package com.epam.pageobject.pages;
 
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -61,12 +59,12 @@ public class GooglePage extends AbstractPage {
 
 	public String getAuthorizeCode() {
 		//accepting access to Google Sheets
-		webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		try {
 			Thread.sleep(10000);
+			System.out.println("Granting access for your developers.google.com application to GoogleSheets...");
 			accessButton.click();
 		} catch (NoSuchElementException e) {
-			System.out.println("No acception needed");
+			System.out.println("Access for your developers.google.com application to GoogleSheets has already been granted...");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

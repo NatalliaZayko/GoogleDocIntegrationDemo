@@ -17,8 +17,6 @@ public class MySpreadsheetIntegration {
 			MalformedURLException, IOException, ServiceException,
 			GeneralSecurityException, InterruptedException {
 		Scanner in = new Scanner(System.in);
-		//System.out.println("Course:");
-		//String course = in.nextLine();		
 		System.out.println("Week:");
 		int week = in.nextInt();
 		in.close();	
@@ -28,6 +26,8 @@ public class MySpreadsheetIntegration {
 		Steps.authorize();
 		
 		Steps.loginInClassMarket();
+		
+		//getting set of tests to go through to get results 
 		Set<String> setOfModules = Steps.getSetOfTestsByWeek(week);
 		Set<String> setOfTests = new HashSet<String>();
 		
@@ -46,7 +46,9 @@ public class MySpreadsheetIntegration {
 		String stringToRemove = null;
 		setOfTests.remove(stringToRemove);
 		
-		
+		System.out.println("Getting results from classmarker.com ...");
+		System.out.println();
+		//getting results
 		for (String test : setOfTests) {
 			String module = null;
 			for (Map.Entry<String, String> entry : associations.entrySet()) {
@@ -54,6 +56,7 @@ public class MySpreadsheetIntegration {
 					module = entry.getKey();
 				}
 			}
+			System.out.println("Getting results for module: " + module);
 			
 			Steps.getListNames(week, module);
 			String testRootName = test.substring(0,test.indexOf("/"));
@@ -62,8 +65,7 @@ public class MySpreadsheetIntegration {
 			Steps.getResults(week);
 			Steps.setResults(week);
 		}
-		//Steps.executeScript();
 		Steps.closeBrowser();
-		
+		System.out.println("Done...");
 	}
 }
